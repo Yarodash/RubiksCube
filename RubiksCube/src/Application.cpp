@@ -73,10 +73,14 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+    //glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+
+    int display_w = 1280, display_h = 720;
+
+    window = glfwCreateWindow(display_w, display_h, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -96,7 +100,8 @@ int main(void)
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
     ImGui::CreateContext();
-    ImGui::StyleColorsLight();
+    //ImGui::StyleColorsLight();
+    ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
@@ -132,34 +137,19 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         {
-            ImGui::Begin("Another Window", NULL, ImGuiWindowFlags_MenuBar);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::SetNextWindowSize(ImVec2(display_w, display_h));
 
-            if (ImGui::BeginMenuBar())
-            {
-                if (ImGui::BeginMenu("Menu"))
-                {
-                    ImGui::EndMenu();
-                }
-                if (ImGui::BeginMenu("Examples"))
-                {
-                    ImGui::MenuItem("Main menu bar", NULL);
-                    ImGui::MenuItem("Console", NULL);
-                    ImGui::EndMenu();
-                }
-                if (ImGui::BeginMenu("Tools"))
-                {
-                    ImGui::EndMenu();
-                }
-                ImGui::EndMenuBar();
-            }
+            ImGui::Begin("Another Window", NULL, ImGuiWindowFlags_MenuBar 
+                | ImGuiWindowFlags_NoTitleBar 
+                | ImGuiWindowFlags_NoMove 
+                | ImGuiWindowFlags_NoResize);
 
-            ImGui::Text("Hello from another window!");
             ImGui::Button("Close Me");
             ImGui::End();
         }
@@ -167,10 +157,9 @@ int main(void)
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
         ImGui::Render();
-        int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        //glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -180,6 +169,10 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;
