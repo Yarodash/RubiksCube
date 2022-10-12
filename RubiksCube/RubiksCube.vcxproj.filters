@@ -74,7 +74,7 @@
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scrambles.h">
+    <ClInclude Include="src\scrambles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rubiks_cube_3d.h">
@@ -924,6 +924,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\glm\vector_relational.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

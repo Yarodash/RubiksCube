@@ -30,8 +30,9 @@
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\rubiks_cube_3d.h" />
-    <ClInclude Include="src\Scrambles.h" />
+    <ClInclude Include="src\scrambles.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
