@@ -26,49 +26,49 @@ namespace Cube3D
 		Piece pieces[27];
 
 		float* create_colorless_piece() {
-			float* data = new float[5 * 3 * 2 * 6]
+			float* data = new float[6 * 3 * 2 * 6]
 			{
-				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 
-				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 
-				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 
-				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 
-				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, +1.0f, 0.0f, 0.0f, 0.0f,
 
-				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 			};
 
 			return data;
@@ -80,15 +80,10 @@ namespace Cube3D
 			float ty[6] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f };
 
 			for (int i = 0; i < 6; i++)
-				tx[i] = (tx[i] + color) / 7.0f;
-
-			for (int i = 0; i < 6; i++)
 			{
-				data[direction * 30 + i * 5 + 3] = tx[i];
-				data[direction * 30 + i * 5 + 4] = ty[i];
-
-				data[direction * 30 + i * 5 + 3] = color / 6.0f;
-				data[direction * 30 + i * 5 + 4] = color / 6.0f;
+				data[direction * 36 + i * 6 + 3] = tx[i];
+				data[direction * 36 + i * 6 + 4] = ty[i];
+				data[direction * 36 + i * 6 + 5] = color;
 			}
 		}
 
@@ -139,9 +134,9 @@ namespace Cube3D
 
 				m_model = glm::translate(m_model, 
 					glm::vec3(
-						(i % 3 - 1) * 2.2f, 
-						(i / 9 % 3 - 1) * -2.2f,
-						(i / 3 % 3 - 1) * -2.2f
+						(i % 3 - 1) * 2.15f, 
+						(i / 9 % 3 - 1) * -2.15f,
+						(i / 3 % 3 - 1) * -2.15f
 					)
 				);	
 
@@ -151,17 +146,20 @@ namespace Cube3D
 				unsigned int vbo;
 				glGenBuffers(1, &vbo);
 				glBindBuffer(GL_ARRAY_BUFFER, vbo);
-				glBufferData(GL_ARRAY_BUFFER, 5 * 3 * 2 * 6 * sizeof(float), data, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, 6 * 3 * 2 * 6 * sizeof(float), data, GL_STATIC_DRAW);
 
 				unsigned int vao;
 				glGenVertexArrays(1, &vao);
 				glBindVertexArray(vao);
 
 				glEnableVertexAttribArray(0);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (const void*)0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)0);
 
 				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (const void*)(3 * sizeof(float)));
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(3 * sizeof(float)));
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(5 * sizeof(float)));
 
 				pieces[i] = Piece(vbo, vao, m_model);
 			}
@@ -183,7 +181,7 @@ namespace Cube3D
 			}
 		}
 
-		void rotate(int axis, float rotation_percent)
+		void rotate(int axis, float rotation_percent, bool inverse=false)
 		{
 			Piece new_pieces[27];
 
@@ -208,13 +206,16 @@ namespace Cube3D
 			};
 			int centers[] = { 14, 12, 4, 22, 10, 16 };
 
+			float rotation_sign = (inverse ? 1.0f : -1.0f);
+			int array_shift = (inverse ? 2 : 6);
+
 			for (int i = 0; i < 8; i++) 
 			{
-				new_pieces[rotations[axis * 8 + i]] = pieces[rotations[axis * 8 + (i + 6) % 8]];
+				new_pieces[rotations[axis * 8 + i]] = pieces[rotations[axis * 8 + (i + array_shift) % 8]];
 				new_pieces[rotations[axis * 8 + i]].m_model =
 					glm::rotate(
 						glm::mat4(1.0),
-						(float)M_PI / -2.0f * rotation_percent,
+						(float)M_PI / 2.0f * rotation_percent * rotation_sign,
 						glm::vec3(matrix_rotation[axis])
 					) * new_pieces[rotations[axis * 8 + i]].m_model;
 			}
@@ -222,7 +223,7 @@ namespace Cube3D
 			new_pieces[centers[axis]].m_model =
 				glm::rotate(
 					glm::mat4(1.0),
-					(float)M_PI / -2.0f * rotation_percent,
+					(float)M_PI / 2.0f * rotation_percent * rotation_sign,
 					glm::vec3(matrix_rotation[axis])
 				) * new_pieces[centers[axis]].m_model;
 
@@ -237,7 +238,7 @@ namespace Cube3D
 	};
 
 	class CubeManager {
-	private:
+	public:
 		Camera camera;
 
 		Cube original_cube;
@@ -246,6 +247,10 @@ namespace Cube3D
 
 		float rotation_percent = 0.0f;
 		float percent_per_second = 1.0f;
+
+		float reset_percent = 1.0f;
+		float reset_percent_per_second = 1.0f;
+		bool in_reset_stage = false;
 
 		std::deque<int> rotation_queue;
 
@@ -268,9 +273,27 @@ namespace Cube3D
 
 		void update(float delta_time)
 		{
+			if (in_reset_stage) {
+				float new_reset_percent = reset_percent + reset_percent_per_second * delta_time;
+
+				if (reset_percent < 0.5 && new_reset_percent >= 0.5) {
+					rotated_cube = original_cube.copy();
+					current_cube = rotated_cube.copy();
+					rotation_queue.clear();
+				}
+
+				if (new_reset_percent >= 1.0f) {
+					in_reset_stage = false;
+					new_reset_percent = 1.0f;
+					rotation_percent = 0.0f;
+				}
+
+				reset_percent = new_reset_percent;
+			}
+
 			if (rotation_queue.size() == 0)
 				return;
-			
+
 			int axis = rotation_queue.front();
 
 			rotation_percent += percent_per_second * delta_time;
@@ -305,7 +328,22 @@ namespace Cube3D
 			glUniformMatrix4fv(glGetUniformLocation(program, "m_view"), 1, GL_FALSE, &m_view[0][0]);
 			glUniformMatrix4fv(glGetUniformLocation(program, "m_proj"), 1, GL_FALSE, &m_proj[0][0]);
 
+			float piece_size = (reset_percent <= 0.5 ? (0.5 - reset_percent) * 2.0 : (reset_percent - 0.5) * 2.0);
+			glUniform1f(glGetUniformLocation(program, "piece_size"), piece_size);
+
 			rotated_cube.render(program);
+		}
+
+		void reset() 
+		{
+			if (reset_percent != 1.0) {
+				if (reset_percent > 0.5)
+					reset_percent = 1 - reset_percent;
+				return;
+			}
+
+			in_reset_stage = true;
+			reset_percent = 0.0f;
 		}
 
 		void rotate_camera(float mouse_x, float mouse_y)

@@ -95,7 +95,6 @@ int main(void)
                     | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoResize);
 
-
                 if (ImGui::Button("R turn"))
                     cube.add_rotation(0);
 
@@ -113,6 +112,9 @@ int main(void)
 
                 if (ImGui::Button("B turn"))
                     cube.add_rotation(5);
+
+                if (ImGui::Button("Reset"))
+                    cube.reset();
 
                 ImGui::End();
             }
@@ -132,6 +134,7 @@ int main(void)
 
             ImGuiIO& io = ImGui::GetIO();
 
+            cube.camera.aspect_ratio = (float)display_w / display_h;
             if (io.MouseDown[0])
                 cube.rotate_camera(io.MouseDelta.x / 300.0, io.MouseDelta.y / 300.0);
 

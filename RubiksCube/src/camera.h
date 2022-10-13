@@ -9,13 +9,13 @@
 
 
 class Camera {
-private: 
+public:
 	double u, v;
 	double fov, aspect_ratio;
 	double radius;
 
 public:
-	Camera(): u(0.0), v(0.0), radius(12.0), fov(45.0), aspect_ratio(1.0) {}
+	Camera(): u(0.5), v(0.5), radius(16.0), fov(45.0), aspect_ratio(1.0) {}
 
 	void rotate(float delta_u, float delta_v) 
 	{
