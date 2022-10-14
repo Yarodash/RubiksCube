@@ -15,7 +15,14 @@ public:
 	double radius;
 
 public:
-	Camera(): u(0.5), v(0.5), radius(16.0), fov(45.0), aspect_ratio(1.0) {}
+	Camera(): u(0.5), v(0.55), radius(20.0), fov(35.0), aspect_ratio(1.0) {}
+
+	void reset() {
+		u = 0.5;
+		v = 0.55;
+		radius = 20.0;
+		fov = 35.0;
+	}
 
 	void rotate(float delta_u, float delta_v) 
 	{
@@ -42,7 +49,7 @@ public:
 
 	glm::mat4 get_proj_matrix()
 	{
-		glm::mat4 m_proj = glm::perspective(fov, aspect_ratio, 0.1, 40.0);
+		glm::mat4 m_proj = glm::perspective(glm::radians(fov), aspect_ratio, 0.1, 40.0);
 
 		return m_proj;
 	}

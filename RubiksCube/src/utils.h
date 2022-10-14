@@ -1,5 +1,9 @@
 #pragma once
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -82,4 +86,39 @@ unsigned int create_program_from_files(const std::string& shaders_name)
         get_file_contents("shaders/" + shaders_name + ".vert"),
         get_file_contents("shaders/" + shaders_name + ".frag")
     );
+}
+
+std::string format_time(float time) 
+{
+    char buff[32];
+
+    int total_millis = (round)(time * 1000);
+    int millis = total_millis % 1000 / 10;
+    int seconds = total_millis / 1000 % 60;
+    int minutes = total_millis / 1000 / 60 % 60;
+    int hours = total_millis / 1000 / 60 / 60;
+
+    if (hours)
+        snprintf(buff, sizeof(buff), "%d:%02d:%02d.%02d", hours, minutes, seconds, millis);
+    else if (minutes)
+        snprintf(buff, sizeof(buff), "%02d:%02d.%02d", minutes, seconds, millis);
+    else 
+        snprintf(buff, sizeof(buff), "%02d.%02d", seconds, millis);
+
+    std::string buffAsStdStr = buff;
+
+    return buffAsStdStr;
+}
+
+void TextColoredCentered(ImVec4 color, std::string text) {
+    auto windowWidth = ImGui::GetWindowSize().x;
+    auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+    auto windowHeight = ImGui::GetWindowSize().y;
+    auto textHeight = ImGui::CalcTextSize(text.c_str()).y;
+
+    ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+    ImGui::SetCursorPosY((windowHeight - 1.5 * textHeight) * 0.5f);
+
+    ImGui::TextColored(color, text.c_str());
 }

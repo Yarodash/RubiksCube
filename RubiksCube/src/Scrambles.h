@@ -1,3 +1,5 @@
+#pragma once
+
 #include <random>
 #include <vector>
 #include <string>
@@ -14,6 +16,28 @@ namespace Scrambles
 		Rotation(axis _axis, int count) {
 			this->_axis = _axis;
 			this->count = count;
+		}
+
+		std::string to_str()
+		{
+			std::string axis_name, rotation_name;
+
+			switch (_axis) {
+				case axis::R: axis_name = "R"; break;
+				case axis::L: axis_name = "L"; break;
+				case axis::U: axis_name = "U"; break;
+				case axis::D: axis_name = "D"; break;
+				case axis::F: axis_name = "F"; break;
+				case axis::B: axis_name = "B"; break;
+			}
+
+			switch (count) {
+				case 1: rotation_name = ""; break;
+				case 2: rotation_name = "2"; break;
+				case 3: rotation_name = "'"; break;
+			}
+
+			return axis_name + rotation_name;
 		}
 	};
 
@@ -47,6 +71,21 @@ namespace Scrambles
 		void reset_index() {
 			index = 0;
 		}
+
+		std::string to_str()
+		{
+			std::string result;
+			reset_index();
+
+			while (has_more())
+			{
+				Rotation rotation = next();
+				result += rotation.to_str() + " ";
+			}
+
+			result.pop_back();
+			return result;
+		}
 	};
 
 	RotationList* generateScramble(int length) 
@@ -72,42 +111,5 @@ namespace Scrambles
 		}
 
 		return list;
-	}
-
-	std::string rotation_to_str(Rotation rotation) 
-	{
-		std::string axis_name, rotation_name;
-
-		switch (rotation._axis) {
-			case axis::R: axis_name = "R"; break;
-			case axis::L: axis_name = "L"; break;
-			case axis::U: axis_name = "U"; break;
-			case axis::D: axis_name = "D"; break;
-			case axis::F: axis_name = "F"; break;
-			case axis::B: axis_name = "B"; break;
-		}
-
-		switch (rotation.count) {
-			case 1: rotation_name = ""; break;
-			case 2: rotation_name = "2"; break;
-			case 3: rotation_name = "'"; break;
-		}
-
-		return axis_name + rotation_name;
-	}
-
-	std::string rotation_list_to_str(RotationList* rotation_list) 
-	{
-		std::string result;
-		rotation_list->reset_index();
-
-		while (rotation_list->has_more()) 
-		{
-			Rotation rotation = rotation_list->next();
-			result += rotation_to_str(rotation) + " ";
-		}
-
-		result.pop_back();
-		return result;
 	}
 }

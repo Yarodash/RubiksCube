@@ -9,6 +9,8 @@
 #include <deque>
 #include "camera.h"
 
+#include "scrambles.h"
+
 namespace Cube3D 
 {
 	struct Piece
@@ -19,6 +21,12 @@ namespace Cube3D
 
 		Piece() : vbo(-1), vao(-1), m_model(glm::mat4()) {}
 		Piece(unsigned int _vbo, unsigned int _vao, glm::mat4 _m_model) : vbo(_vbo), vao(_vao), m_model(_m_model) {}
+
+		void destroy()
+		{
+			glDeleteBuffers(1, &vbo);
+			glDeleteVertexArrays(1, &vao);
+		}
 	};
 
 	class Cube
@@ -231,6 +239,12 @@ namespace Cube3D
 				pieces[i] = new_pieces[i];
 		}
 
+		void destroy()
+		{
+			for (int i = 0; i < 27; i++)
+				pieces[i].destroy();
+		}
+
 		Cube copy() 
 		{
 			return Cube(this);
@@ -252,7 +266,7 @@ namespace Cube3D
 		float reset_percent_per_second = 1.0f;
 		bool in_reset_stage = false;
 
-		std::deque<int> rotation_queue;
+		std::deque<std::pair<int, bool>> rotation_queue;
 
 	public:
 		CubeManager() 
@@ -263,12 +277,17 @@ namespace Cube3D
 
 			camera = Camera();
 
-			rotation_queue = std::deque<int>();
+			rotation_queue = std::deque<std::pair<int, bool>>();
 		}
 
-		void add_rotation(int axis) 
+		~CubeManager()
 		{
-			rotation_queue.push_back(axis);
+			original_cube.destroy();
+		}
+
+		void add_rotation(int axis, bool inverse=false) 
+		{
+			rotation_queue.push_back(std::make_pair(axis, inverse));
 		}
 
 		void update(float delta_time)
@@ -294,7 +313,9 @@ namespace Cube3D
 			if (rotation_queue.size() == 0)
 				return;
 
-			int axis = rotation_queue.front();
+			std::pair<int, bool> rotation = rotation_queue.front();
+			int axis = rotation.first;
+			bool inverse = rotation.second;
 
 			rotation_percent += percent_per_second * delta_time;
 			if (rotation_percent >= 1.0f) {
@@ -307,10 +328,10 @@ namespace Cube3D
 
 			if (rotation_percent < 1.0f) {
 				rotated_cube = current_cube.copy();
-				rotated_cube.rotate(axis, rotation_percent);
+				rotated_cube.rotate(axis, rotation_percent, inverse);
 			}
 			else {
-				current_cube.rotate(axis, 1.0f);
+				current_cube.rotate(axis, 1.0f, inverse);
 				rotated_cube = current_cube.copy();
 				rotation_queue.pop_front();
 				rotation_percent = 0.0f;
@@ -344,6 +365,25 @@ namespace Cube3D
 
 			in_reset_stage = true;
 			reset_percent = 0.0f;
+		}
+
+		void apply_scramble(Scrambles::RotationList* scramble) 
+		{
+			scramble->reset_index();
+
+			while (scramble->has_more()) 
+			{
+				Scrambles::Rotation rotation = scramble->next();
+
+				if (rotation.count <= 2) 
+					add_rotation(rotation._axis);
+
+				if (rotation.count == 2)
+					add_rotation(rotation._axis);
+
+				if (rotation.count == 3)
+					add_rotation(rotation._axis, true);
+			}
 		}
 
 		void rotate_camera(float mouse_x, float mouse_y)
