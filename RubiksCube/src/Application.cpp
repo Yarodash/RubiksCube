@@ -15,13 +15,18 @@
 
 #include "scrambles.h"
 #include "rubiks_cube_3d.h"
+#include "results_table.h"
+
+#include <memory>
 
 GLFWwindow* window;
-int display_w = 1080, display_h = 720;
+int display_w = 1200, display_h = 720;
 unsigned int program;
 
 struct AppData {
     Cube3D::CubeManager cube = Cube3D::CubeManager();
+    Results results = Results();
+    std::shared_ptr<Scrambles::RotationList> last_scramble_ptr;
 
     // 0 - timer stopped
     // 1 - show scramble
@@ -36,11 +41,14 @@ struct AppData {
     float rotation_per_sec = 1.2f;
 
     std::string scramble_window_text = "Press SPACE to generate scramble";
+    ImVec4 scramble_color = ImVec4(1.0, 1.0, 1.0, 1.0);
     ImVec4 timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
 
     ImGuiIO& io = ImGui::GetIO();
 
     ImFont* default_font = io.Fonts->AddFontFromFileTTF("fonts\\GoogleSans-Regular.ttf", 20.0f);
+    ImFont* table_font_big = io.Fonts->AddFontFromFileTTF("fonts\\Digital.ttf", 21.0f);
+    ImFont* table_font_small = io.Fonts->AddFontFromFileTTF("fonts\\Digital.ttf", 16.0f);
     ImFont* scramble_font = io.Fonts->AddFontFromFileTTF("fonts\\Digital.ttf", 26.0f);
     ImFont* timer_font = io.Fonts->AddFontFromFileTTF("fonts\\Digital.ttf", 48.0f);
 
@@ -106,20 +114,19 @@ void deinit()
 
 void set_stage_0(AppData& app_data, bool ignore_time=false)
 {
+    app_data.scramble_color = ImVec4(1.0, 1.0, 1.0, 1.0);
+    app_data.timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
+
     app_data.scramble_window_text = "Press SPACE to generate scramble";
-    app_data.stage = 0;
+    
     app_data.cube.percent_per_second = app_data.rotation_per_sec;
 
-    if (ignore_time) {
-        app_data.timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
-    }
-    else
-    {
-        app_data.timer_color = ImVec4(0.5, 1.0, 0.5, 1.0);
-    }
-    
+    app_data.timer_color = (ignore_time ? ImVec4(1.0, 1.0, 1.0, 1.0) : ImVec4(0.5, 1.0, 0.5, 1.0));
     
     app_data.cube.reset();
+    app_data.cube.reset_rotation_buffer();
+
+    app_data.stage = 0;
 }
 
 void set_stage_1(AppData& app_data)
@@ -132,14 +139,19 @@ void set_stage_1(AppData& app_data)
 
     app_data.cube.apply_scramble(scramble);
 
+    app_data.last_scramble_ptr = std::shared_ptr<Scrambles::RotationList>(scramble);
+
     app_data.timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
 
-    app_data.stage = 1;
     app_data.ignore_space = true;
+    app_data.ready_to_start = false;
+
+    app_data.stage = 1;
 }
 
 void set_stage_2(AppData& app_data)
 {
+    app_data.scramble_color = ImVec4(1.0, 1.0, 1.0, 1.0);
     app_data.timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
     app_data.ready_to_start = false;
     app_data.stage = 2;
@@ -164,15 +176,20 @@ void update(AppData& app_data)
         if (!io.KeysData[ImGuiKey_Space].Down) {
             app_data.ignore_space = false;
             app_data.timer_color = ImVec4(1.0, 1.0, 1.0, 1.0);
+            app_data.scramble_color = ImVec4(1.0, 1.0, 1.0, 1.0);
         }
 
-        if (io.KeysData[ImGuiKey_Space].DownDuration >= 0.0f && !app_data.ignore_space)
+        if (io.KeysData[ImGuiKey_Space].DownDuration >= 0.0f && !app_data.ignore_space) {
             app_data.timer_color = ImVec4(1.0, 0.8, 0.8, 1.0);
+            app_data.scramble_color = ImVec4(1.0, 0.8, 0.8, 1.0);
+        }
 
         if (io.KeysData[ImGuiKey_Space].DownDuration >= 0.5f && !app_data.ignore_space)
         {
             app_data.timer_time = 0.0f;
+            app_data.scramble_color = ImVec4(1.0, 0.2, 0.2, 1.0);
             app_data.timer_color = ImVec4(1.0, 0.2, 0.2, 1.0);
+            app_data.scramble_window_text = "release SPACE to start timer";
             app_data.ready_to_start = true;
             app_data.cube.percent_per_second = 1000000.0f;
         }
@@ -187,6 +204,7 @@ void update(AppData& app_data)
         app_data.timer_time += io.DeltaTime;
 
         if (io.KeysData[ImGuiKey_Space].Down) {
+            app_data.results.add_new(SingleResult(app_data.timer_time, app_data.last_scramble_ptr));
             set_stage_0(app_data);
         }
     }
@@ -194,17 +212,17 @@ void update(AppData& app_data)
     if (io.MouseReleased[0])
         app_data.cursor_rotate_cube = false;
 
-    if (io.MouseDownDuration[0] == 0.0f && io.MousePos.x < display_w * 2 / 3 && io.MousePos.y < display_h * 2 / 3)
+    if (io.MouseDownDuration[0] == 0.0f && io.MousePos.x < display_w * 2.0 / 3.0 && io.MousePos.y < display_h * 2.0 / 3.0)
         app_data.cursor_rotate_cube = true;
 
-    app_data.cube.camera.aspect_ratio = (float)display_w / display_h;
+    app_data.cube.camera.aspect_ratio = (display_w * 3.0 / 5.0) / (display_h * 2.0 / 3.0);
 }
 
 void imgui_window(AppData& app_data)
 {
     {
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(display_w * 2 / 3, display_h * 2 / 3));
+        ImGui::SetNextWindowSize(ImVec2(display_w * 3 / 5, display_h * 2 / 3));
 
         ImGui::Begin("CubeRenderWindow", NULL,
             ImGuiWindowFlags_NoTitleBar
@@ -249,14 +267,15 @@ void imgui_window(AppData& app_data)
     }
 
     {
-        ImGui::SetNextWindowPos(ImVec2(display_w * 2 / 3, 0));
-        ImGui::SetNextWindowSize(ImVec2(display_w / 3 + 1, display_h * 2 / 3));
+        ImGui::SetNextWindowPos(ImVec2(display_w * 3 / 5, 0));
+        ImGui::SetNextWindowSize(ImVec2(display_w * 2 / 5, display_h * 2 / 3));
 
         ImGui::Begin("ResultsWindow", NULL,
-            ImGuiWindowFlags_MenuBar
-            | ImGuiWindowFlags_NoTitleBar
+            ImGuiWindowFlags_NoTitleBar
             | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoResize);
+
+        app_data.results.show_table(app_data.table_font_big, app_data.table_font_small);
 
         ImGui::End();
     }
@@ -273,14 +292,14 @@ void imgui_window(AppData& app_data)
 
         ImGui::PushFont(app_data.default_font);
 
-        if (app_data.stage >= 1)
+        if (app_data.stage == 1)
             if (ImGui::Button("Back"))
                 set_stage_0(app_data, true);
 
         ImGui::PopFont();
 
-        if (!app_data.ready_to_start && app_data.stage != 2)
-            TextColoredCentered(ImVec4(1.0, 1.0, 1.0, 1.0), app_data.scramble_window_text);
+        if (app_data.stage != 2)
+            TextColoredCentered(app_data.scramble_color, app_data.scramble_window_text);
 
         ImGui::End();
         ImGui::PopFont();
@@ -312,7 +331,7 @@ void render(AppData& app_data)
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glViewport(0, display_h / 3, display_w * 2 / 3, display_h * 2 / 3);
+    glViewport(0, display_h / 3, display_w * 3 / 5, display_h * 2 / 3);
     glClear(GL_DEPTH_BUFFER_BIT);
     app_data.cube.render(program);
 
@@ -322,6 +341,8 @@ void render(AppData& app_data)
 void body()
 {
     AppData app_data = AppData();
+
+    app_data.cube.reset();
 
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.06f, 0.06f, 0.06f, 0.0f));
 

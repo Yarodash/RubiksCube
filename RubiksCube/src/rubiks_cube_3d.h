@@ -267,6 +267,7 @@ namespace Cube3D
 		bool in_reset_stage = false;
 
 		std::deque<std::pair<int, bool>> rotation_queue;
+		std::deque<std::pair<int, bool>> rotation_queue_buffer;
 
 	public:
 		CubeManager() 
@@ -278,6 +279,7 @@ namespace Cube3D
 			camera = Camera();
 
 			rotation_queue = std::deque<std::pair<int, bool>>();
+			rotation_queue_buffer = std::deque<std::pair<int, bool>>();
 		}
 
 		~CubeManager()
@@ -287,7 +289,10 @@ namespace Cube3D
 
 		void add_rotation(int axis, bool inverse=false) 
 		{
-			rotation_queue.push_back(std::make_pair(axis, inverse));
+			if (in_reset_stage)
+				rotation_queue_buffer.push_back(std::make_pair(axis, inverse));
+			else
+				rotation_queue.push_back(std::make_pair(axis, inverse));
 		}
 
 		void update(float delta_time)
@@ -305,6 +310,11 @@ namespace Cube3D
 					in_reset_stage = false;
 					new_reset_percent = 1.0f;
 					rotation_percent = 0.0f;
+
+					while (rotation_queue_buffer.size() > 0) {
+						rotation_queue.push_back(rotation_queue_buffer.front());
+						rotation_queue_buffer.pop_front();
+					}
 				}
 
 				reset_percent = new_reset_percent;
@@ -365,6 +375,10 @@ namespace Cube3D
 
 			in_reset_stage = true;
 			reset_percent = 0.0f;
+		}
+
+		void reset_rotation_buffer() {
+			rotation_queue_buffer.clear();
 		}
 
 		void apply_scramble(Scrambles::RotationList* scramble) 

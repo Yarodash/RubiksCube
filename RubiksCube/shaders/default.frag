@@ -19,7 +19,7 @@ vec3 get_color() {
 		return vec3(1.0, 0.0, 0.0);
 
 	if (color == 2.0)
-		return vec3(1.0, 0.5, 0.0);
+		return vec3(1.0, 0.3, 0.0);
 
 	if (color == 3.0)
 		return vec3(1.0, 1.0, 1.0);
@@ -54,5 +54,5 @@ void main()
 
 	result_color = get_borders(result_color);
 
-	f_color = vec4(result_color, 1.0);
+	f_color = vec4(pow(result_color, vec3(1.2)), 1.0);
 }

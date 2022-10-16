@@ -92,7 +92,11 @@ std::string format_time(float time)
 {
     char buff[32];
 
-    int total_millis = (round)(time * 1000);
+    int total_millis = round(time * 1000);
+
+    if (total_millis < 0) 
+        total_millis = 0;
+
     int millis = total_millis % 1000 / 10;
     int seconds = total_millis / 1000 % 60;
     int minutes = total_millis / 1000 / 60 % 60;

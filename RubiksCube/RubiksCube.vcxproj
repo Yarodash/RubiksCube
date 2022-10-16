@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\results_table.h" />
     <ClInclude Include="src\rubiks_cube_3d.h" />
     <ClInclude Include="src\scrambles.h" />
     <ClInclude Include="src\utils.h" />
