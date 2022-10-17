@@ -69,7 +69,7 @@ int init()
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(display_w, display_h, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(display_w, display_h, "Rubik's cube", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
